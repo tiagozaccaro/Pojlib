@@ -1,3 +1,4 @@
+val commonsCodecVersion by extra("20041127.091804")
 plugins {
 
     /**
@@ -8,6 +9,6 @@ plugins {
      * Applying external plugins with same version to subprojects.
      */
 
-    id("com.android.library") version "7.4.1" apply false
+    id("com.android.library") version "7.4.2" apply false
     id("org.jetbrains.kotlin.android") version "1.5.31" apply false
 }

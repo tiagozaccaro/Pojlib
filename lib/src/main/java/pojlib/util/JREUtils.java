@@ -190,9 +190,9 @@ public class JREUtils {
 
         //Add automatically generated args
 
-        if (API_V1.customRAMValue) {
-            userArgs.add("-Xms" + API_V1.memoryValue + "M");
-            userArgs.add("-Xmx" + API_V1.memoryValue + "M");
+        if (API_V1.isCustomRAMValue()) {
+            userArgs.add("-Xms" + API_V1.getMemoryValue() + "M");
+            userArgs.add("-Xmx" + API_V1.getMemoryValue() + "M");
         } else {
             userArgs.add("-Xms" + 2048 + "M");
             userArgs.add("-Xmx" + 2048 + "M");

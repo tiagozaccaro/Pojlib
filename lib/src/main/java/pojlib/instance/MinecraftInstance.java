@@ -71,7 +71,7 @@ public class MinecraftInstance {
 
             // Write instance to json file
             GsonUtils.objectToJsonFile(gameDir + "/instances/" + instanceName + "/instance.json", instance);
-            API_V1.finishedDownloading = true;
+            API_V1.setFinishedDownloading(true);
         }).start();
         return instance;
     }
@@ -84,7 +84,7 @@ public class MinecraftInstance {
 
     // Return true if instance was deleted
     public static boolean delete(String instanceName, String gameDir) throws IOException {
-        if (API_V1.ignoreInstanceName) {
+        if (API_V1.isIgnoreInstanceName()) {
             return new File(gameDir + "/instances/" + instanceName).delete();
         } else if (instanceName.contains("/") || instanceName.contains("!")) {
             throw new IOException("You cannot use special characters (!, /, ., etc) when deleting instances.");
@@ -111,7 +111,7 @@ public class MinecraftInstance {
             File modsOld = new File(Constants.USER_HOME + "/mods.json");
             File customMods = new File(Constants.MC_DIR + "/custom_mods.json");
 
-            if (API_V1.developerMods) {
+            if (API_V1.isDeveloperMods()) {
                 DownloadUtils.downloadFile(DEV_MODS, mods);
             } else { DownloadUtils.downloadFile(MODS, mods); }
 
@@ -306,14 +306,16 @@ public class MinecraftInstance {
     }
 
     public void launchInstance(Activity activity, MinecraftAccount account) {
-        try {
-            updateOrDownloadsMods();
-            JREUtils.redirectAndPrintJRELog();
+        updateOrDownloadsMods();
+        JREUtils.redirectAndPrintJRELog();
+        activity.getMainExecutor().execute(() -> {
             VLoader.setAndroidInitInfo(activity);
             VLoader.setEGLGlobal(JREUtils.getEGLContextPtr(), JREUtils.getEGLDisplayPtr(), JREUtils.getEGLConfigPtr());
-            JREUtils.launchJavaVM(activity, generateLaunchArgs(account), versionName);
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
+            try {
+                JREUtils.launchJavaVM(activity, generateLaunchArgs(account), versionName);
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

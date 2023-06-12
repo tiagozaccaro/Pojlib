@@ -105,7 +105,7 @@ public class APIHandler {
 
     public static MinecraftMeta.MinecraftVersion[] getQCSupportedVersions() {
 
-        if (API_V1.developerMods) {
+        if (API_V1.isDeveloperMods()) {
             JsonObject jsonObject = GsonUtils.GLOBAL_GSON.fromJson(getRaw(MinecraftInstance.DEV_MODS), JsonObject.class);
             ArrayList<MinecraftMeta.MinecraftVersion> versionsList = new ArrayList<>();
             for(String verName : jsonObject.keySet()) {

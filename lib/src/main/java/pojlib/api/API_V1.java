@@ -12,6 +12,8 @@ import pojlib.install.*;
 import pojlib.instance.MinecraftInstance;
 import pojlib.util.APIHandler;
 import pojlib.util.Constants;
+import pojlib.util.StaticProperty;
+import pojlib.util.StaticPropertyObserver;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -24,6 +26,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
 
 /**
  * This class is the only class used by the launcher to communicate and talk to pojlib. This keeps pojlib and launcher separate.
@@ -32,20 +37,157 @@ import java.nio.charset.StandardCharsets;
  */
 public class API_V1 {
 
-    public static String msaMessage = "";
     private static boolean hasQueried = false;
     private static JsonObject initialResponse;
-    public static boolean finishedDownloading = false;
-    public static boolean ignoreInstanceName;
-    public static boolean customRAMValue = false;
-    public static double downloadStatus;
-    public static String currentDownload;
-    public static String profileImage;
-    public static String profileName;
-    public static String memoryValue = "3072";
-    public static boolean developerMods;
-    public static boolean advancedDebugger;
 
+    private static String msaMessage = "";
+    private static boolean finishedDownloading = false;
+    private static boolean ignoreInstanceName = false;
+    private static boolean customRAMValue = false;
+    private static double downloadStatus = 0.0;
+    private static String currentDownload = "";
+    private static String profileImage = "";
+    private static String profileName = "";
+    private static String memoryValue = "3072";
+    private static boolean developerMods = false;
+    private static boolean advancedDebugger = false;
+
+    public static String getMsaMessage() {
+        return msaMessage;
+    }
+
+    public static void setMsaMessage(String msaMessage) {
+        if (!API_V1.msaMessage.equals(msaMessage)) {
+            API_V1.msaMessage = msaMessage;
+            notifyObservers(StaticProperty.MSA_MESSAGE);
+        }
+    }
+
+    public static boolean isFinishedDownloading() {
+        return finishedDownloading;
+    }
+
+    public static void setFinishedDownloading(boolean finishedDownloading) {
+        if (API_V1.finishedDownloading != finishedDownloading) {
+            API_V1.finishedDownloading = finishedDownloading;
+            notifyObservers(StaticProperty.FINISHED_DOWNLOADING);
+        }
+    }
+
+    public static boolean isIgnoreInstanceName() {
+        return ignoreInstanceName;
+    }
+
+    public static void setIgnoreInstanceName(boolean ignoreInstanceName) {
+        if (API_V1.ignoreInstanceName != ignoreInstanceName) {
+            API_V1.ignoreInstanceName = ignoreInstanceName;
+            notifyObservers(StaticProperty.IGNORE_INSTANCE_NAME);
+        }
+    }
+
+    public static boolean isCustomRAMValue() {
+        return customRAMValue;
+    }
+
+    public static void setCustomRAMValue(boolean customRAMValue) {
+        if (API_V1.customRAMValue != customRAMValue) {
+            API_V1.customRAMValue = customRAMValue;
+            notifyObservers(StaticProperty.CUSTOM_RAM_VALUE);
+        }
+    }
+
+    public static double getDownloadStatus() {
+        return downloadStatus;
+    }
+
+    public static void setDownloadStatus(double downloadStatus) {
+        if (API_V1.downloadStatus != downloadStatus) {
+            API_V1.downloadStatus = downloadStatus;
+            notifyObservers(StaticProperty.DOWNLOAD_STATUS);
+        }
+    }
+
+    public static String getCurrentDownload() {
+        return currentDownload;
+    }
+
+    public static void setCurrentDownload(String currentDownload) {
+        if (!API_V1.getCurrentDownload().equals(currentDownload)) {
+            API_V1.currentDownload = currentDownload;
+            notifyObservers(StaticProperty.CURRENT_DOWNLOAD);
+        }
+    }
+
+    public static String getProfileImage() {
+        return profileImage;
+    }
+
+    public static void setProfileImage(String profileImage) {
+        if (!API_V1.profileImage.equals(profileImage)) {
+            API_V1.profileImage = profileImage;
+            notifyObservers(StaticProperty.PROFILE_IMAGE);
+        }
+    }
+
+    public static String getProfileName() {
+        return profileName;
+    }
+
+    public static void setProfileName(String profileName) {
+        if (!API_V1.profileName.equals(profileName)) {
+            API_V1.profileName = profileName;
+            notifyObservers(StaticProperty.PROFILE_NAME);
+        }
+    }
+
+    public static String getMemoryValue() {
+        return memoryValue;
+    }
+
+    public static void setMemoryValue(String memoryValue) {
+        if (!API_V1.memoryValue.equals(memoryValue)) {
+            API_V1.memoryValue = memoryValue;
+            notifyObservers(StaticProperty.MEMORY_VALUE);
+        }
+    }
+
+    public static boolean isDeveloperMods() {
+        return developerMods;
+    }
+
+    public static void setDeveloperMods(boolean developerMods) {
+        if (API_V1.developerMods != developerMods) {
+            API_V1.developerMods = developerMods;
+            notifyObservers(StaticProperty.DEVELOPER_MODS);
+        }
+    }
+
+    public static boolean isAdvancedDebugger() {
+        return advancedDebugger;
+    }
+
+    public static void setAdvancedDebugger(boolean advancedDebugger) {
+        if (API_V1.advancedDebugger != advancedDebugger) {
+            API_V1.advancedDebugger = advancedDebugger;
+            notifyObservers(StaticProperty.ADVANCED_DEBUGGER);
+        }
+    }
+
+    private static List<StaticPropertyObserver> observers = new ArrayList<>();
+
+    public static void addObserver(StaticPropertyObserver observer) {
+        observers.add(observer);
+    }
+
+    public static void removeObserver(StaticPropertyObserver observer) {
+        observers.remove(observer);
+    }
+
+    private static void notifyObservers(StaticProperty property) {
+        for (StaticPropertyObserver observer : observers) {
+            observer.onStaticPropertyChanged(property);
+        }
+    }
 
     /**
      * @return A list of every minecraft version

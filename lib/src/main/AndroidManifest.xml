@@ -1,5 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="pojlib.android">
-    <application android:allowNativeHeapPointerTagging="false">
+    <application android:allowNativeHeapPointerTagging="false" android:largeHeap="true">
+        <meta-data
+            android:name="org.godotengine.plugin.v1.pojlib"
+            android:value="pojlib.GodotActivity" />
     </application>
 </manifest>

@@ -37,17 +37,17 @@ public class DownloadUtils {
             }
 
             String[] segments = url.getPath().split("/");
-            API_V1.currentDownload = segments[segments.length - 1];
+            API_V1.setCurrentDownload(segments[segments.length - 1]);
 
             is = new StreamDL(conn.getInputStream());
 
             ((StreamDL)is).addListener((b, count) -> {
 
                 if (b == -1) {
-                    API_V1.downloadStatus = 0;
-                    API_V1.currentDownload = null;
+                    API_V1.setDownloadStatus(0);
+                    API_V1.setCurrentDownload(null);
                 } else {
-                    API_V1.downloadStatus = count * 0.000001;
+                    API_V1.setDownloadStatus(count * 0.000001);
                 }
 
             });

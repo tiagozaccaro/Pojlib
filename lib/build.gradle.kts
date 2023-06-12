@@ -5,9 +5,9 @@ plugins {
 
 android {
     ndkVersion = "25.2.9519653"
-    compileSdkVersion = "android-31"
+    compileSdkVersion = "android-32"
     defaultConfig {
-        minSdkVersion(31)
+        minSdkVersion(29)
     }
 
     buildTypes {
@@ -34,12 +34,8 @@ dependencies {
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation("com.google.guava:guava:31.0.1-jre")
-}
-
-dependencies {
     implementation("org.jetbrains:annotations:24.0.0")
     implementation("com.google.code.gson:gson:2.10.1")
-    implementation("org.json:json:20220924")
     implementation("commons-io:commons-io:2.11.0")
     implementation("commons-codec:commons-codec:1.15")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
@@ -49,6 +45,6 @@ dependencies {
     implementation("com.google.android.material:material:1.8.0")
     implementation("androidx.annotation:annotation:1.6.0")
     implementation("androidx.browser:browser:1.5.0")
-    implementation("blank:unity-classes")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    compileOnly("org.godotengine:godot:4.0.3.stable")
 }
